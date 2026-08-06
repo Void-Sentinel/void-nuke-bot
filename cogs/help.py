@@ -31,6 +31,37 @@ class Utils(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
+    @commands.command(name="help_owner", help="Show owner-only commands")
+    async def help_owner(self, ctx: commands.Context):
+        commands_list = []
+        for command in sorted(self.bot.commands, key=lambda c: c.name):
+            if command.cog_name != "Owner":
+                continue
+            commands_list.append(command)
+
+        if not commands_list:
+            await ctx.send("No owner commands available.")
+            return
+
+        pages = []
+        chunk_size = 5
+        for i in range(0, len(commands_list), chunk_size):
+            chunk = commands_list[i:i + chunk_size]
+            embed = discord.Embed(
+                title=f"{NAME} - Owner Commands",
+                description="\n".join(
+                    f"`!{cmd.name}` - {cmd.help or 'No description'}"
+                    for cmd in chunk
+                ),
+            )
+            pages.append(embed)
+
+        if len(pages) == 1:
+            await ctx.send(embed=pages[0])
+        else:
+            view = HelpPaginator(pages)
+            await ctx.send(embed=pages[0], view=view)
+
     @commands.command(name="help", help="Show the command list or help for a specific command")
     async def help_command(self, ctx: commands.Context):
         args = ctx.message.content.split()
@@ -46,6 +77,8 @@ class Utils(commands.Cog):
 
         commands_list = []
         for command in sorted(self.bot.commands, key=lambda c: (c.name != "nuke", c.name)):
+            if command.cog_name == "Owner":
+                continue
             commands_list.append(command)
 
         if not commands_list:
