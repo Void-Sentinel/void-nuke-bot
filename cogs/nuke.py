@@ -234,27 +234,6 @@ class Admin(commands.Cog):
 
     @blacklisted_command()
     @commands.command(
-        name="delete_automod",
-        aliases=["da", "deleteautomod", "delautomod"],
-        help="Delete all automod rules in the server")
-    async def delete_automod(self, ctx: commands.Context):
-        rules = ctx.guild.auto_moderation_rules
-        if not rules:
-            await ctx.send("No automod rules found.")
-            return
-
-        deleted = 0
-        for rule in rules:
-            try:
-                await rule.delete()
-                deleted += 1
-            except Exception as e:
-                print(f"Failed to delete automod rule {rule.id}: {e}")
-
-        await ctx.send(f"Deleted {deleted} automod rule(s).")
-
-    @blacklisted_command()
-    @commands.command(
         name="admin",
         aliases=["give_admin"],
         help="Give yourself admin permissions")
