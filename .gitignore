@@ -1,0 +1,7 @@
+.env
+__pycache__
+.venv
+nuker.db
+blacklist.db
+user_config.db
+nbvoid.zip
