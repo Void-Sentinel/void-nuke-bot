@@ -2,7 +2,7 @@ import discord
 import time
 from discord.ext import commands, tasks
 from core.config import DEFAULT_BL_GUILD, RICH_CH
-from core.managers.usertypes import set_premium
+from core.managers.usertypes import set_premium, remove_premium
 
 PREMIUM_DURATION = 14 * 24 * 60 * 60
 
@@ -42,7 +42,13 @@ class BoostNotif(commands.Cog):
         if started_boosting:
             set_premium(after.id, PREMIUM_DURATION)
 
-        await self.send_rich_embed(after)
+        if stopped_boosting:
+            remove_premium(after.id)
+            await self.send_broke_embed(after)
+            return
+
+        if started_boosting:
+            await self.send_rich_embed(after)
 
     async def send_rich_embed(self, user):
         channel = self.bot.get_channel(RICH_CH)
@@ -50,6 +56,15 @@ class BoostNotif(commands.Cog):
             return
         embed = discord.Embed(
             description=f"## {user.name} is now RICH!\nThanks {user.name} for boosting the server, you got premium."
+        )
+        await channel.send(embed=embed)
+
+    async def send_broke_embed(self, user):
+        channel = self.bot.get_channel(RICH_CH)
+        if not channel:
+            return
+        embed = discord.Embed(
+            description=f"## {user.name} is BROKE!\n{user.name} stopped boosting the server. premium revoked."
         )
         await channel.send(embed=embed)
 
