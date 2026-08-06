@@ -7,8 +7,11 @@ from core.events import Events
 
 tracemalloc.start()
 load_dotenv()
-
-
+# vibe coded bot bro!
+#voby7isafemboyhahauwu
+#n
+#
+# boiii so mango
 class Bot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.all()
