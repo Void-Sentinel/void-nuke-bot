@@ -11,7 +11,9 @@ DEFAULT_BL_GUILD = [1531718828575424643] # vsentinel guild id
 SERVER_INVITE = "https://discord.gg/Ym6zpgrJPh"
 NUKE_IMG = "https://files.catbox.moe/7sq3oz.png"
 
-RICH_CH = None
+RICH_CH = 1534962126177701989 # set ur rich channel here for boost notifications, not required if you prefer webhook sends
+RICH_WEB = os.getenv("RICH_WEBHOOK", "") # fallback webhook if channel is not set, not required if you prefer channel sends
+
 
 SPAMMSG = f"""
 ||@everyone|| BEST BOTS?? JOIN VOID SENTINEL

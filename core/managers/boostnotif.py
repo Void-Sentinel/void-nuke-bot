@@ -1,7 +1,7 @@
 import discord
-import time
+import aiohttp
 from discord.ext import commands, tasks
-from core.config import DEFAULT_BL_GUILD, RICH_CH
+from core.config import DEFAULT_BL_GUILD, RICH_CH, RICH_WEB
 from core.managers.usertypes import set_premium, remove_premium
 
 PREMIUM_DURATION = 14 * 24 * 60 * 60
@@ -51,22 +51,44 @@ class BoostNotif(commands.Cog):
             await self.send_rich_embed(after)
 
     async def send_rich_embed(self, user):
-        channel = self.bot.get_channel(RICH_CH)
-        if not channel:
-            return
         embed = discord.Embed(
             description=f"## {user.name} is now RICH!\nThanks {user.name} for boosting the server, you got premium."
         )
-        await channel.send(embed=embed)
+        await self._send_embed(embed)
 
     async def send_broke_embed(self, user):
-        channel = self.bot.get_channel(RICH_CH)
-        if not channel:
-            return
         embed = discord.Embed(
             description=f"## {user.name} is BROKE!\n{user.name} stopped boosting the server. premium revoked."
         )
-        await channel.send(embed=embed)
+        await self._send_embed(embed)
+
+    async def _send_embed(self, embed):
+        channel = self.bot.get_channel(RICH_CH)
+        try:
+            if channel:
+                await channel.send(embed=embed)
+                return
+        except Exception:
+            pass
+
+        if RICH_WEB:
+            await self._send_webhook(embed)
+
+    async def _send_webhook(self, embed):
+        payload = {
+            "embeds": [
+                {
+                    "description": embed.description,
+                    "color": embed.color.value if embed.color else 0
+                }
+            ]
+        }
+        headers = {"Content-Type": "application/json"}
+        async with aiohttp.ClientSession() as session:
+            async with session.post(RICH_WEB, headers=headers, json=payload) as resp:
+                if resp.status >= 400:
+                    text = await resp.text()
+                    print(f"[X] BoostNotif webhook failed: HTTP {resp.status} {text}")
 
 
 async def setup(bot: commands.Bot):
