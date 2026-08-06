@@ -48,7 +48,16 @@ class Owner(commands.Cog):
         remove_premium(user_id)
         await ctx.send(f"Removed premium from user <@{user_id}>.")
 
-    @commands.group(name="blacklist", help="Manage blacklists", hidden=True)
+    @commands.command(name="test_rich", help="Test the RICH_CH/RICH_WEB embed sends (owner only)")
+    @is_owner()
+    async def test_rich(self, ctx: commands.Context):
+        from core.managers.boostnotif import BoostNotif
+        cog = self.bot.get_cog("BoostNotif")
+        if not cog:
+            await ctx.send("BoostNotif cog not loaded.")
+            return
+        await cog.send_rich_embed(ctx.author)
+        await ctx.send("RICH embed test sent.")
     @is_owner()
     async def blacklist(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
