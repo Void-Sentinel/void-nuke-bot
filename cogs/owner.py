@@ -40,13 +40,13 @@ class Owner(commands.Cog):
     @is_owner()
     async def set_premium(self, ctx: commands.Context, user_id: int, duration_seconds: int):
         set_premium(user_id, duration_seconds)
-        await ctx.send(f"Set premium for user {user_id} for {duration_seconds} seconds.")
+        await ctx.send(f"Set premium for user <@{user_id}> for {duration_seconds} seconds.")
 
     @commands.command(name="remove_premium", help="Remove premium status from a user (owner only)")
     @is_owner()
     async def remove_premium(self, ctx: commands.Context, user_id: int):
         remove_premium(user_id)
-        await ctx.send(f"Removed premium from user {user_id}.")
+        await ctx.send(f"Removed premium from user <@{user_id}>.")
 
     @commands.group(name="blacklist", help="Manage blacklists", hidden=True)
     @is_owner()

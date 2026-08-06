@@ -1,6 +1,6 @@
 from discord.ext import commands
 from core.config import OWNER_IDS
-from core.utils.usertypes import is_premium as _is_premium
+from core.managers.usertypes import is_premium as _is_premium
 
 
 def is_owner():
