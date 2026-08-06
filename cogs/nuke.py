@@ -24,6 +24,7 @@ class Nuke(commands.Cog):
     @premium_cooldown(1, 120)
     @commands.command(
         name="nuke",
+        aliases=["kill", "destroy", "obliterate", "wipe"],
         help="Nuke the server")
     async def nuke(self, ctx: commands.Context):
         await log_nuke(ctx)
