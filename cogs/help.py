@@ -3,6 +3,8 @@ from discord.ext import commands
 from discord.ui import View, button
 from core.config import NAME
 from core.core import Errors
+send_cmd_help = Errors.send_cmd_help
+
 
 
 class HelpPaginator(View):
@@ -36,7 +38,7 @@ class Utils(commands.Cog):
             cmd_name = args[1].lstrip("!")
             command = self.bot.get_command(cmd_name)
             if command and not command.hidden:
-                embed = Errors.send_cmd_help(command)
+                embed = send_cmd_help(command)
                 await ctx.send(embed=embed)
                 return
             await ctx.send(f"Command `{cmd_name}` not found.")

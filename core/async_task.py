@@ -5,7 +5,7 @@ from typing import Any, Union
 from aiolimiter import AsyncLimiter
 import aiohttp
 
-requests_per_second = 45
+requests_per_second = 50
 limiter = AsyncLimiter(requests_per_second + 1, 1.0185)
 
 
@@ -17,7 +17,7 @@ async def request(method, url, headers, json=None, return_json=False):
         if resp.status == 429:
             resp_json = await resp.json()
             retry_after = float(resp_json.get("retry_after", 0))
-            print(f"Rate limited. Sleeping {retry_after}s")
+            print(f"Rate limited. Waiting after {retry_after}s")
             if 0 < retry_after < 15:
                 await asyncio.sleep(retry_after)
                 return await request(method, url, headers, json, return_json)
