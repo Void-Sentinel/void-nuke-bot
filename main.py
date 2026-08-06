@@ -35,7 +35,6 @@ class Bot(commands.Bot):
         from core.managers.usertypes import setup as usertypes_setup
         await usertypes_setup(self)
 
-
 async def run_bot():
     bot = Bot()
     token = os.getenv("DISCORD_TOKEN")
