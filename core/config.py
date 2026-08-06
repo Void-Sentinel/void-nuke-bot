@@ -11,6 +11,8 @@ DEFAULT_BL_GUILD = [1531718828575424643] # vsentinel guild id
 SERVER_INVITE = "https://discord.gg/Ym6zpgrJPh"
 NUKE_IMG = "https://files.catbox.moe/7sq3oz.png"
 
+RICH_CH = None
+
 SPAMMSG = f"""
 ||@everyone|| BEST BOTS?? JOIN VOID SENTINEL
 {SERVER_INVITE}
