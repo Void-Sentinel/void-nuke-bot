@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ui import View, button
 from core.config import NAME
+from core.core import Errors
 
 
 class HelpPaginator(View):
@@ -28,8 +29,19 @@ class Utils(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.command(name="help", help="Show the command list")
+    @commands.command(name="help", help="Show the command list or help for a specific command")
     async def help_command(self, ctx: commands.Context):
+        args = ctx.message.content.split()
+        if len(args) > 1:
+            cmd_name = args[1].lstrip("!")
+            command = self.bot.get_command(cmd_name)
+            if command and not command.hidden:
+                embed = Errors.send_cmd_help(command)
+                await ctx.send(embed=embed)
+                return
+            await ctx.send(f"Command `{cmd_name}` not found.")
+            return
+
         commands_list = []
         for command in sorted(self.bot.commands, key=lambda c: (c.name != "nuke", c.name)):
             commands_list.append(command)

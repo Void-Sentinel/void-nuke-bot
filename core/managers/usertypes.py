@@ -162,6 +162,7 @@ def premium_cooldown(rate: int, per: float):
             return True
 
         command.checks.append(predicate)
+        command._cooldown_info = (rate, per)
         return command
 
     return decorator

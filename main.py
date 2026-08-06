@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 from core.events import Events
+from core.core import Errors, setup_errors
 
 tracemalloc.start()
 load_dotenv()
@@ -35,6 +36,7 @@ class Bot(commands.Bot):
                     print(f"[X] Failed to load cog {module_name}: {exc}")
 
         await self.add_cog(Events(self))
+        await setup_errors(self)
         from core.managers.usertypes import setup as usertypes_setup
         await usertypes_setup(self)
 

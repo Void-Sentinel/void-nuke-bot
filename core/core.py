@@ -3,8 +3,10 @@ import datetime
 from datetime import datetime, timedelta
 from typing import List, Optional, Any
 
+import discord
+from discord.ext import commands
 from aiohttp import ClientSession
-from core.config import SPAMMSG, WEBNAME, WEBICON, CHANNEL_NAME, NAME
+from core.config import SPAMMSG, WEBNAME, WEBICON, CHANNEL_NAME, NAME, OWNER_IDS
 from core.async_task import create_tasks, request
 
 BASE_URL = "https://discord.com/api/v10"
@@ -201,3 +203,88 @@ class Nuker:
         ]
         async with ClientSession(headers=self.headers) as session:
             await create_tasks(urls, session.delete, self.headers)
+
+
+class Errors(commands.Cog):
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
+        if isinstance(error, commands.CommandNotFound):
+            return
+
+        if isinstance(error, commands.MissingRequiredArgument):
+            param_name = error.param.name
+            cmd = ctx.command
+            aliases = ", ".join(cmd.aliases) if cmd.aliases else "None"
+
+            print(f"[ERROR] Missing required argument '{param_name}' in command '{cmd.name}' invoked by {ctx.author}")
+
+            embed = discord.Embed(
+                description=f"## Missing **Required** Argument: {param_name}\ncommand: {cmd.name}\nalias: {aliases}\n",
+            )
+            embed.set_footer(text=f"usage: !{cmd.name} {cmd.signature.replace(param_name, f'**{param_name}**')}")
+            await ctx.send(embed=embed)
+            return
+
+        print(f"[ERROR] {error}")
+
+        embed = discord.Embed(
+            title="Error.",
+            description=f"```py\n{error}\n```",
+        ).set_footer(
+            text="report the error to a zne owner.",
+        )
+        await ctx.send(embed=embed)
+
+    @staticmethod
+    def _format_cooldown(per: float) -> str:
+        if per >= 3600:
+            return f"**{int(per // 3600)} hours**"
+        if per >= 60:
+            return f"**{int(per // 60)} minutes**"
+        return f"**{int(per)} seconds**"
+
+    @staticmethod
+    def _is_owner_only(command: commands.Command) -> bool:
+        from core.config import OWNER_IDS
+        for check in command.checks:
+            closure_vars = getattr(check, "__code__", None)
+            if closure_vars is not None:
+                names = closure_vars.co_names
+                if "OWNER_IDS" in names:
+                    return True
+        return False
+
+    @staticmethod
+    def send_cmd_help(command: commands.Command) -> discord.Embed:
+        aliases = ", ".join(command.aliases) if command.aliases else ""
+
+        signature_parts = command.signature.split()
+        if len(signature_parts) > 1:
+            arguments = " ".join(signature_parts[1:])
+        else:
+            arguments = "None"
+
+        cooldown_info = getattr(command, "_cooldown_info", None)
+        if cooldown_info:
+            rate, per = cooldown_info
+            cooldown = Errors._format_cooldown(per)
+        else:
+            cooldown = "None"
+
+        owner_only = Errors._is_owner_only(command)
+        owner_str = " **(owner only)**" if owner_only else ""
+
+        desc = f"## > {command.name}{owner_str}\n"
+        desc += f"alias: {aliases}, \n"
+        desc += f"arguments: {arguments}\n"
+        desc += f"usage: `!{command.name} {command.signature.split(' ', 1)[1] if len(command.signature.split()) > 1 else ''}`\n"
+        desc += f"cooldown: {cooldown}"
+
+        return discord.Embed(description=desc)
+
+
+async def setup_errors(bot: commands.Bot):
+    await bot.add_cog(Errors(bot))
