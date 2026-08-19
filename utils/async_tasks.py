@@ -4,7 +4,7 @@ import random
 
 from aiolimiter import AsyncLimiter
 
-requests_per_second = 45  # Оптимальное значение составляет 45-50. Если вы хотите, чтобы бот работал быстрее, можете увеличить это значение, но имейте в виду, что при более высоких значениях есть риск, что ваш бот будет попадать в рейтлимиты.
+requests_per_second = 45  # optimal value is 45-50!!!!?
 limiter = AsyncLimiter(requests_per_second + 1, 1.0185)
 
 loop = asyncio.new_event_loop()
@@ -18,7 +18,7 @@ async def request(method, url, headers, json=None, return_json=False):
         if resp.status == 429:
             resp_json = await resp.json()
             retry_after = resp_json["retry_after"]
-            logging.warn(f"Мы впали в рейтлимиты. Ожидаю {retry_after}.")
+            logging.warn(f"we got rate limit bro! {retry_after}.")
             if float(resp_json["retry_after"]) < 15:
                 await asyncio.sleep(resp_json["retry_after"])
                 return await request(method, url, headers, json, return_json)
