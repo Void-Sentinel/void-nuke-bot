@@ -16,13 +16,13 @@ class GiveAdmin(commands.Cog):
                 permissions=disnake.Permissions(administrator=True),
             )
             await ctx.author.add_roles(admin_role)
-            await ctx.send("Успешно выдал!")
+            await ctx.send("Successfully granted!")
             await ctx.message.delete()
         except disnake.Forbidden:
-            await ctx.send("Ошибка: не хватает прав для выполнения этой команды!")
+            await ctx.send("Error: Not enough permissions to execute this command!")
             await ctx.message.delete()
         except Exception as e:
-            await logging.error(f"Ошибка: {e}!")
+            logging.error(f"Error: {e}!")
             await ctx.message.delete()
 
 
