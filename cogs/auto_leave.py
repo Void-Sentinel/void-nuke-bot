@@ -1,6 +1,6 @@
 from disnake.ext import commands, tasks
 
-# Самый простой автоливер на планете земля.
+# The simplest auto-leaver on planet earth.
 
 
 class Autoleave(commands.Cog):
@@ -10,7 +10,7 @@ class Autoleave(commands.Cog):
 
     @tasks.loop(
         hours=4
-    )  # Ставьте время, в часах/минутах/секундах, когда вы хотите, чтобы бот вышел из серверов.
+    )  # Set the time, in hours/minutes/seconds, when you want the bot to leave servers.
     async def leave_task(self):
         for guild in self.bot.guilds:
             await guild.leave()
