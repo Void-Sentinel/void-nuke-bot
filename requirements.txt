@@ -1,0 +1,4 @@
+disnake
+aiolimiter
+aiohttp
+art 
