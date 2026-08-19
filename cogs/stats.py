@@ -16,12 +16,12 @@ class Stats(commands.Cog):
         avg_attack_duration = self.attack_counter.get_avg_attack_duration()
 
         embed = disnake.Embed(
-            title="Статистика атак", color=disnake.Color.from_rgb(48, 49, 54)
+            title="Attack Statistics", color=disnake.Color.from_rgb(48, 49, 54)
         )
-        embed.add_field(name="Всего атак:", value=total_attacks, inline=False)
-        embed.add_field(name="Сегодняшние атаки:", value=daily_attacks, inline=False)
+        embed.add_field(name="Total attacks:", value=total_attacks, inline=False)
+        embed.add_field(name="Today's attacks:", value=daily_attacks, inline=False)
         embed.add_field(
-            name="Средняя продолжительность атаки (сек):",
+            name="Average attack duration (sec):",
             value=f"{avg_attack_duration:.2f}",
             inline=False,
         )
