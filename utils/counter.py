@@ -2,8 +2,6 @@ import datetime
 import json
 import logging
 
-# Логика учета атак
-
 
 class AttackCounter:
     def __init__(self, filename="attack_count.json"):
@@ -33,7 +31,7 @@ class AttackCounter:
 
     def record_attack_end(self):
         if not hasattr(self, "attack_start_time"):
-            logging.error("Начало атаки не было записано!")
+            logging.error("Error while recording attack end.")
             return
 
         attack_end_time = datetime.datetime.now()
@@ -47,7 +45,7 @@ class AttackCounter:
 
         self.data["daily_attacks"][today] += 1
 
-        logging.info("Записал окончание атаки с длительностью: %.2f секунд" % duration)
+        logging.info("Recorded end of attack with duration: %.2f seconds" % duration)
 
         self.save_data()
 
