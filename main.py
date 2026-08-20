@@ -1,4 +1,3 @@
-import logging
 import os
 
 import discord
@@ -7,8 +6,6 @@ from discord.ext import commands
 
 from core.config.token import TOKEN
 from core.config.config import NAME
-
-logger = logging.getLogger(__name__)
 
 
 class Bot(commands.Bot):
@@ -24,7 +21,7 @@ class Bot(commands.Bot):
         [#] Started {NAME} NB
         [#] Developer: voby7 | github.com/Ramimnur20
               """)
-        logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
+        print(f"Logged in as {self.user} (ID: {self.user.id})")
         await self.load_cogs()
         self.print_invite_link()
 
@@ -32,12 +29,11 @@ class Bot(commands.Bot):
         for filename in os.listdir("modules"):
             if filename.endswith(".py") and not filename.startswith("__"):
                 await self.load_extension(f"modules.{filename[:-3]}")
-                logger.info(f"Loaded {filename[:-3]} loaded!")
+                print(f"Loaded {filename[:-3]} loaded!")
 
     def print_invite_link(self):
-        permissions = discord.Permissions(permissions=8)
-        invite_link = discord.utils.oauth_url(self.user.id, permissions=permissions)
-        logger.info(f"Invite link for the bot: {invite_link}")
+        invite_link = discord.utils.oauth_url(self.user.id, permissions=discord.Permissions(permissions=8))
+        print(f"Invite link for the bot: {invite_link}")
 
 
 def main():

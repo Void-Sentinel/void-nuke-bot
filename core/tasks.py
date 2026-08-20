@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import random
 
 from aiolimiter import AsyncLimiter
@@ -18,7 +17,7 @@ async def request(method, url, headers, json=None, return_json=False):
         if resp.status == 429:
             resp_json = await resp.json()
             retry_after = resp_json["retry_after"]
-            logging.warn(f"we got rate limit bro! {retry_after}.")
+            print(f"we got rate limit bro! {retry_after}.")
             if float(resp_json["retry_after"]) < 15:
                 await asyncio.sleep(resp_json["retry_after"])
                 return await request(method, url, headers, json, return_json)

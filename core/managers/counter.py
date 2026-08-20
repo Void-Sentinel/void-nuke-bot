@@ -1,6 +1,5 @@
 import datetime
 import json
-import logging
 
 
 class AttackCounter:
@@ -31,7 +30,7 @@ class AttackCounter:
 
     def record_attack_end(self):
         if not hasattr(self, "attack_start_time"):
-            logging.error("Error while recording attack end.")
+            print("Error while recording attack end.")
             return
 
         attack_end_time = datetime.datetime.now()
@@ -45,7 +44,7 @@ class AttackCounter:
 
         self.data["daily_attacks"][today] += 1
 
-        logging.info("Recorded end of attack with duration: %.2f seconds" % duration)
+        print("Recorded end of attack with duration: %.2f seconds" % duration)
 
         self.save_data()
 

