@@ -4,6 +4,6 @@ from core.config.token import TOKEN
 
 headers = {"Authorization": f"Bot {TOKEN}"}
 LINKSERV = "https://discord.gg/Y6qZ4TKRM5"
-CHNAME = "Voidteam"
+CHNAME = ["Voidteam", "Void", "Nuked", "Rip", "Deleted", "Gone", "Wiped", "Owned"]
 TEXT = "Void. https://github.com/Ramimnur20"
 NAME = "Void"

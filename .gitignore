@@ -4,3 +4,4 @@ data/nukes.json
 .vscode
 .kilo
 __pycache__
+tmp_prompts

