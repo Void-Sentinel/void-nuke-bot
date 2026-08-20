@@ -3,8 +3,9 @@ import json
 
 
 class AttackCounter:
-    def __init__(self, filename="attack_count.json"):
+    def __init__(self, filename="attack_count.json", nukes_filename="data/nukes.json"):
         self.filename = filename
+        self.nukes_filename = nukes_filename
         self.load_data()
 
     def load_data(self):
@@ -16,10 +17,13 @@ class AttackCounter:
                 "total_attacks": 0,
                 "daily_attacks": {},
                 "attack_durations": [],
+                "individual_nukes": [],
             }
         else:
             if "attack_durations" not in self.data:
                 self.data["attack_durations"] = []
+            if "individual_nukes" not in self.data:
+                self.data["individual_nukes"] = []
 
     def save_data(self):
         with open(self.filename, "w") as file:
@@ -28,7 +32,7 @@ class AttackCounter:
     def record_attack_start(self):
         self.attack_start_time = datetime.datetime.now()
 
-    def record_attack_end(self):
+    def record_attack_end(self, server_name=None, attack=None):
         if not hasattr(self, "attack_start_time"):
             print("Error while recording attack end.")
             return
@@ -44,9 +48,35 @@ class AttackCounter:
 
         self.data["daily_attacks"][today] += 1
 
+        self.data["individual_nukes"].append({
+            "server_name": server_name,
+            "attack": attack,
+            "duration": duration,
+            "date": today,
+        })
+
+        self.save_nuke_entry({
+            "server_name": server_name,
+            "attack": attack,
+            "duration": duration,
+            "date": today,
+        })
+
         print("Recorded end of attack with duration: %.2f seconds" % duration)
 
         self.save_data()
+
+    def save_nuke_entry(self, entry):
+        try:
+            with open(self.nukes_filename, "r") as file:
+                nukes = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            nukes = []
+
+        nukes.append(entry)
+
+        with open(self.nukes_filename, "w") as file:
+            json.dump(nukes, file, indent=4)
 
     def get_total_attacks(self):
         return self.data["total_attacks"]

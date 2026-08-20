@@ -1,4 +1,5 @@
 import discord
+import random
 from discord.ext import commands, tasks
 
 from core.managers.counter import AttackCounter
@@ -8,14 +9,23 @@ class Ping(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def get_random_ping_msg(self):
+        with open("data/pings.txt", "r") as file:
+            lines = [line.strip() for line in file if line.strip()]
+        return random.choice(lines) if lines else "the void"
+
     @commands.command(name="ping", description="Check ping")
     async def ping(self, ctx):
-        message = await ctx.send("Pinging...")
-        embed = discord.Embed(title="Ping", color=discord.Color.from_rgb(48, 49, 54))
-        embed.add_field(
-            name="Pong! 🏓", value=f"`{round(self.bot.latency * 1000)}ms`", inline=False
+        initial_ping = round(self.bot.latency * 1000)
+        random_ping_msg = self.get_random_ping_msg()
+        message = await ctx.send(
+            f"it took `{initial_ping}ms` to ping **{random_ping_msg}** (edit: `0ms`)."
         )
-        await message.edit(embed=embed)
+
+        edit_ping = round(self.bot.latency * 1000)
+        await message.edit(
+            content=f"it took `{initial_ping}ms` to ping **{random_ping_msg}** (edit: `{edit_ping}ms`)."
+        )
 
 
 class Stats(commands.Cog):

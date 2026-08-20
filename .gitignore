@@ -1,5 +1,5 @@
 core/config/token.py
-attack_count.json
+data/nukes.json
 .venv
 .vscode
 .kilo
