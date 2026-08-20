@@ -3,3 +3,4 @@ core/config/token
 .venv
 .vscode
 .kilo
+__pycache__
