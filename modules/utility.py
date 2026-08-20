@@ -56,17 +56,32 @@ class Stats(commands.Cog):
 class Autoleave(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.leave_task.start()
+
+    async def leave_low_member_servers(self, threshold):
+        to_leave = [
+            guild for guild in self.bot.guilds if guild.member_count < threshold
+        ]
+        for guild in to_leave:
+            try:
+                await guild.leave()
+            except discord.HTTPException:
+                continue
 
     @tasks.loop(
         hours=4
     )  # Set the time, in hours/minutes/seconds, when you want the bot to leave servers.
     async def leave_task(self):
-        for guild in self.bot.guilds:
-            await guild.leave()
+        guild_count = len(self.bot.guilds)
+
+        if guild_count > 95:
+            await self.leave_low_member_servers(50)
+        elif guild_count > 75:
+            await self.leave_low_member_servers(10)
 
 
 async def setup(bot):
     await bot.add_cog(Ping(bot))
     await bot.add_cog(Stats(bot))
-    await bot.add_cog(Autoleave(bot))
+    autoleave = Autoleave(bot)
+    await bot.add_cog(autoleave)
+    autoleave.leave_task.start()
