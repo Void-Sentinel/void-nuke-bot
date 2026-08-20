@@ -40,10 +40,17 @@ async def create_tasks(urls, method, headers, json=None):
     tasks = []
     for i in range(0, len(urls), requests_per_second):
         current_urls = urls[i : requests_per_second + i]
-        tasks += [
-            asyncio.create_task(request(method, url, headers, json))
-            for url in current_urls
-        ]
+        if isinstance(json, list):
+            current_json = json[i : requests_per_second + i]
+            tasks += [
+                asyncio.create_task(request(method, url, headers, j))
+                for url, j in zip(current_urls, current_json)
+            ]
+        else:
+            tasks += [
+                asyncio.create_task(request(method, url, headers, json))
+                for url in current_urls
+            ]
         await asyncio.sleep(0.25)
         await _wait_for_tasks_end()
 

