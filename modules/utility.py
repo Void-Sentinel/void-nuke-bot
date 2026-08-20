@@ -56,7 +56,7 @@ class Autoleave(commands.Cog):
             await guild.leave()
 
 
-def setup(bot):
-    bot.add_cog(Ping(bot))
-    bot.add_cog(Stats(bot))
-    bot.add_cog(Autoleave(bot))
+async def setup(bot):
+    await bot.add_cog(Ping(bot))
+    await bot.add_cog(Stats(bot))
+    await bot.add_cog(Autoleave(bot))

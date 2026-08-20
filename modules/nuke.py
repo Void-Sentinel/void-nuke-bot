@@ -64,6 +64,6 @@ class Nuke(commands.Cog):
             raise error
 
 
-def setup(bot):
-    bot.add_cog(GiveAdmin(bot))
-    bot.add_cog(Nuke(bot))
+async def setup(bot):
+    await bot.add_cog(GiveAdmin(bot))
+    await bot.add_cog(Nuke(bot))
