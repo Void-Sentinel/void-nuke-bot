@@ -37,7 +37,10 @@ class Bot(commands.Bot):
 
 
 def main():
-    Bot().run(TOKEN)
+    try:
+        Bot().run(TOKEN)
+    except KeyboardInterrupt:
+        exit()
 
 
 if __name__ == "__main__":

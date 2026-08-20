@@ -1,3 +1,5 @@
+import time
+
 import discord
 import random
 from discord.ext import commands, tasks
@@ -16,13 +18,20 @@ class Ping(commands.Cog):
 
     @commands.command(name="ping", description="Check ping")
     async def ping(self, ctx):
-        initial_ping = round(self.bot.latency * 1000)
         random_ping_msg = self.get_random_ping_msg()
-        message = await ctx.send(
-            f"it took `{initial_ping}ms` to ping **{random_ping_msg}** (edit: `0ms`)."
-        )
 
-        edit_ping = round(self.bot.latency * 1000)
+        start = time.perf_counter()
+        message = await ctx.send(
+            f"it took `0ms` to ping **{random_ping_msg}** (edit: `0ms`)."
+        )
+        initial_ping = round((time.perf_counter() - start) * 1000)
+
+        start = time.perf_counter()
+        await message.edit(
+            content=f"it took `{initial_ping}ms` to ping **{random_ping_msg}** (edit: `0ms`)."
+        )
+        edit_ping = round((time.perf_counter() - start) * 1000)
+
         await message.edit(
             content=f"it took `{initial_ping}ms` to ping **{random_ping_msg}** (edit: `{edit_ping}ms`)."
         )
