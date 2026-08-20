@@ -6,6 +6,7 @@ from art import text2art
 from disnake.ext import commands
 
 from core.config.token import TOKEN
+from core.config.config import NAME
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,7 @@ class Bot(commands.Bot):
         )
 
     async def on_ready(self):
-        print(text2art("Void", font="fire_font-s"))
+        print(text2art(NAME, font="fire_font-s"))
         print("""
         [#] Started Void NB
         [#] Developer: voby7 | github.com/Ramimnur20

