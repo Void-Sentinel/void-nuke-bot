@@ -1,5 +1,5 @@
-import disnake
-from disnake.ext import commands, tasks
+import discord
+from discord.ext import commands, tasks
 
 from core.managers.counter import AttackCounter
 
@@ -11,7 +11,7 @@ class Ping(commands.Cog):
     @commands.command(name="ping", description="Check ping")
     async def ping(self, ctx):
         message = await ctx.send("Pinging...")
-        embed = disnake.Embed(title="Ping", color=disnake.Color.from_rgb(48, 49, 54))
+        embed = discord.Embed(title="Ping", color=discord.Color.from_rgb(48, 49, 54))
         embed.add_field(
             name="Pong! 🏓", value=f"`{round(self.bot.latency * 1000)}ms`", inline=False
         )
@@ -29,8 +29,8 @@ class Stats(commands.Cog):
         daily_attacks = self.attack_counter.get_daily_attacks()
         avg_attack_duration = self.attack_counter.get_avg_attack_duration()
 
-        embed = disnake.Embed(
-            title="Attack Statistics", color=disnake.Color.from_rgb(48, 49, 54)
+        embed = discord.Embed(
+            title="Attack Statistics", color=discord.Color.from_rgb(48, 49, 54)
         )
         embed.add_field(name="Total attacks:", value=total_attacks, inline=False)
         embed.add_field(name="Today's attacks:", value=daily_attacks, inline=False)

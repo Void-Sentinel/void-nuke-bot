@@ -1,9 +1,9 @@
 import logging
 import os
 
-import disnake
+import discord
 from art import text2art
-from disnake.ext import commands
+from discord.ext import commands
 
 from core.config.token import TOKEN
 from core.config.config import NAME
@@ -15,7 +15,7 @@ class Bot(commands.Bot):
     def __init__(self):
         super().__init__(
             command_prefix=commands.when_mentioned_or("V.", "v.", "!", "."),
-            intents=disnake.Intents.all(),
+            intents=discord.Intents.all(),
         )
 
     async def on_ready(self):
@@ -35,8 +35,8 @@ class Bot(commands.Bot):
                 logger.info(f"Loaded {filename[:-3]} loaded!")
 
     def print_invite_link(self):
-        permissions = disnake.Permissions(permissions=8)
-        invite_link = disnake.utils.oauth_url(self.user.id, permissions=permissions)
+        permissions = discord.Permissions(permissions=8)
+        invite_link = discord.utils.oauth_url(self.user.id, permissions=permissions)
         logger.info(f"Invite link for the bot: {invite_link}")
 
 

