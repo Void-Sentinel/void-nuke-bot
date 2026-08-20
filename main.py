@@ -20,8 +20,8 @@ class Bot(commands.Bot):
 
     async def on_ready(self):
         print(text2art(NAME, font="fire_font-s"))
-        print("""
-        [#] Started Void NB
+        print(f"""
+        [#] Started {NAME} NB
         [#] Developer: voby7 | github.com/Ramimnur20
               """)
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")

