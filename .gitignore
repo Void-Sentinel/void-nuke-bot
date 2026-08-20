@@ -1,2 +1,5 @@
 config/token
+core/config/token
 .venv
+.vscode
+.kilo
