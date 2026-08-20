@@ -25,13 +25,13 @@ class Bot(commands.Bot):
         [#] Developer: voby7 | github.com/Ramimnur20
               """)
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
-        self.load_cogs()
+        await self.load_cogs()
         self.print_invite_link()
 
-    def load_cogs(self):
+    async def load_cogs(self):
         for filename in os.listdir("modules"):
             if filename.endswith(".py") and not filename.startswith("__"):
-                self.load_extension(f"modules.{filename[:-3]}")
+                await self.load_extension(f"modules.{filename[:-3]}")
                 logger.info(f"Loaded {filename[:-3]} loaded!")
 
     def print_invite_link(self):

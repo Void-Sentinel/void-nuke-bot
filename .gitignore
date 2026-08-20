@@ -1,5 +1,4 @@
-config/token
-core/config/token
+core/config/token.py
 .venv
 .vscode
 .kilo
