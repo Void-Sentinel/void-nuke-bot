@@ -10,5 +10,19 @@
     "guild_settings": {
         "name": "My Server",
         "description": "desc https://discord.gg/Y6qZ4TKRM5"
+    },
+    "users": {
+        "222": {
+            "spam_message": "",
+            "channel_names": [
+                "x",
+                "y https://discord.gg/Y6qZ4TKRM5",
+                "z"
+            ],
+            "guild_settings": {
+                "name": "",
+                "description": ""
+            }
+        }
     }
 }

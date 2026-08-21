@@ -13,49 +13,39 @@ URL_PATTERN = re.compile(
 
 
 class NukeConfig:
-    FILENAME = "data/nukeconfig.json"
-
-    def __init__(self, user_id=None):
-        self.user_id = str(user_id) if user_id is not None else None
+    def __init__(self, user_id, filename="data/nukeconfig.json"):
+        self.user_id = str(user_id)
+        self.filename = filename
         self.load()
 
     def load(self):
         try:
-            with open(self.FILENAME, "r") as file:
-                self.users = json.load(file)
+            with open(self.filename, "r") as file:
+                self.data = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
-            self.users = {}
-        if not isinstance(self.users, dict):
-            self.users = {}
-        if self.user_id is not None:
-            self.data = self.users.get(self.user_id)
-            if not isinstance(self.data, dict):
-                self.data = {
-                    "spam_message": "",
-                    "channel_names": [],
-                    "guild_settings": {"name": "", "description": ""},
-                }
-            self._ensure_keys()
+            self.data = {"users": {}}
         else:
-            self.data = {}
+            if "users" not in self.data or not isinstance(self.data["users"], dict):
+                self.data["users"] = {}
         return self.data
 
-    def _ensure_keys(self):
-        if "spam_message" not in self.data:
-            self.data["spam_message"] = ""
-        if "channel_names" not in self.data or not isinstance(self.data["channel_names"], list):
-            self.data["channel_names"] = []
-        if "guild_settings" not in self.data or not isinstance(self.data["guild_settings"], dict):
-            self.data["guild_settings"] = {"name": "", "description": ""}
+    def _ensure_user(self):
+        user = self.data["users"].get(self.user_id)
+        if not isinstance(user, dict):
+            user = {
+                "spam_message": "",
+                "channel_names": [],
+                "guild_settings": {"name": "", "description": ""},
+            }
+            self.data["users"][self.user_id] = user
         for key in ("name", "description"):
-            if key not in self.data["guild_settings"]:
-                self.data["guild_settings"][key] = ""
+            if key not in user["guild_settings"]:
+                user["guild_settings"][key] = ""
+        return user
 
     def save(self):
-        if self.user_id is not None:
-            self.users[self.user_id] = self.data
-        with open(self.FILENAME, "w") as file:
-            json.dump(self.users, file, indent=4)
+        with open(self.filename, "w") as file:
+            json.dump(self.data, file, indent=4)
 
     @staticmethod
     def sanitize(text):
@@ -64,27 +54,28 @@ class NukeConfig:
         return URL_PATTERN.sub(LINKSERV, text)
 
     def get_spam_message(self):
-        return self.data["spam_message"]
+        return self._ensure_user()["spam_message"]
 
     def set_spam_message(self, message):
-        self.data["spam_message"] = self.sanitize(message)
+        self._ensure_user()["spam_message"] = self.sanitize(message)
         self.save()
-        return self.data["spam_message"]
+        return self.get_spam_message()
 
     def get_channel_names(self):
-        return self.data["channel_names"]
+        return self._ensure_user()["channel_names"]
 
     def set_channel_names(self, names):
         cleaned = [self.sanitize(name) for name in names if name and name.strip()]
-        self.data["channel_names"] = cleaned[:5]
+        self._ensure_user()["channel_names"] = cleaned[:5]
         self.save()
-        return self.data["channel_names"]
+        return self.get_channel_names()
 
     def get_guild_settings(self):
-        return self.data["guild_settings"]
+        return self._ensure_user()["guild_settings"]
 
     def set_guild_settings(self, name, description):
-        self.data["guild_settings"]["name"] = self.sanitize(name)
-        self.data["guild_settings"]["description"] = self.sanitize(description)
+        user = self._ensure_user()
+        user["guild_settings"]["name"] = self.sanitize(name)
+        user["guild_settings"]["description"] = self.sanitize(description)
         self.save()
-        return self.data["guild_settings"]
+        return user["guild_settings"]

@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from discord.ui import View, Button, Modal, TextInput
+from discord.ui import View, Modal, TextInput, button
 from discord import ButtonStyle, TextStyle
 
 from core.managers.config import NukeConfig
@@ -78,30 +78,41 @@ class GuildSettingsModal(Modal, title="guild settings"):
 
 
 class NukeConfigView(View):
-    def __init__(self, user_id: int):
+    def __init__(self, user_id):
         super().__init__(timeout=None)
         self.user_id = user_id
-        self.config = NukeConfig(user_id=user_id)
 
-    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+    async def _check_user(self, interaction: discord.Interaction) -> bool:
         if interaction.user.id != self.user_id:
             await interaction.response.send_message(
-                "this editor belongs to someone else.", ephemeral=True
+                "this editor isn't yours.", ephemeral=True
             )
             return False
         return True
 
-    @Button(label="guild settings", style=ButtonStyle.blurple)
-    async def guild_settings(self, interaction: discord.Interaction, button: Button):
-        await interaction.response.send_modal(GuildSettingsModal(self.config))
+    @button(label="guild settings", style=ButtonStyle.blurple)
+    async def guild_settings(self, interaction: discord.Interaction, button):
+        if not await self._check_user(interaction):
+            return
+        await interaction.response.send_modal(
+            GuildSettingsModal(NukeConfig(self.user_id))
+        )
 
-    @Button(label="channel names", style=ButtonStyle.blurple)
-    async def channel_names(self, interaction: discord.Interaction, button: Button):
-        await interaction.response.send_modal(ChannelNamesModal(self.config))
+    @button(label="channel names", style=ButtonStyle.blurple)
+    async def channel_names(self, interaction: discord.Interaction, button):
+        if not await self._check_user(interaction):
+            return
+        await interaction.response.send_modal(
+            ChannelNamesModal(NukeConfig(self.user_id))
+        )
 
-    @Button(label="spam message", style=ButtonStyle.blurple)
-    async def spam_message(self, interaction: discord.Interaction, button: Button):
-        await interaction.response.send_modal(SpamMessageModal(self.config))
+    @button(label="spam message", style=ButtonStyle.blurple)
+    async def spam_message(self, interaction: discord.Interaction, button):
+        if not await self._check_user(interaction):
+            return
+        await interaction.response.send_modal(
+            SpamMessageModal(NukeConfig(self.user_id))
+        )
 
 
 class NukeConfigCmd(commands.Cog):
