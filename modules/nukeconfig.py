@@ -78,9 +78,18 @@ class GuildSettingsModal(Modal, title="guild settings"):
 
 
 class NukeConfigView(View):
-    def __init__(self):
+    def __init__(self, user_id: int):
         super().__init__(timeout=None)
-        self.config = NukeConfig()
+        self.user_id = user_id
+        self.config = NukeConfig(user_id=user_id)
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        if interaction.user.id != self.user_id:
+            await interaction.response.send_message(
+                "this editor belongs to someone else.", ephemeral=True
+            )
+            return False
+        return True
 
     @Button(label="guild settings", style=ButtonStyle.blurple)
     async def guild_settings(self, interaction: discord.Interaction, button: Button):
@@ -108,7 +117,7 @@ class NukeConfigCmd(commands.Cog):
                 "-# please keep in mind that putting custom invites is forbidden and will be replaced"
             ),
         )
-        view = NukeConfigView()
+        view = NukeConfigView(ctx.author.id)
         await ctx.send(embed=embed, view=view)
 
 

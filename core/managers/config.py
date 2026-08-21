@@ -13,22 +13,31 @@ URL_PATTERN = re.compile(
 
 
 class NukeConfig:
-    def __init__(self, filename="data/nukeconfig.json"):
-        self.filename = filename
+    FILENAME = "data/nukeconfig.json"
+
+    def __init__(self, user_id=None):
+        self.user_id = str(user_id) if user_id is not None else None
         self.load()
 
     def load(self):
         try:
-            with open(self.filename, "r") as file:
-                self.data = json.load(file)
+            with open(self.FILENAME, "r") as file:
+                self.users = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
-            self.data = {
-                "spam_message": "",
-                "channel_names": [],
-                "guild_settings": {"name": "", "description": ""},
-            }
-        else:
+            self.users = {}
+        if not isinstance(self.users, dict):
+            self.users = {}
+        if self.user_id is not None:
+            self.data = self.users.get(self.user_id)
+            if not isinstance(self.data, dict):
+                self.data = {
+                    "spam_message": "",
+                    "channel_names": [],
+                    "guild_settings": {"name": "", "description": ""},
+                }
             self._ensure_keys()
+        else:
+            self.data = {}
         return self.data
 
     def _ensure_keys(self):
@@ -43,8 +52,10 @@ class NukeConfig:
                 self.data["guild_settings"][key] = ""
 
     def save(self):
-        with open(self.filename, "w") as file:
-            json.dump(self.data, file, indent=4)
+        if self.user_id is not None:
+            self.users[self.user_id] = self.data
+        with open(self.FILENAME, "w") as file:
+            json.dump(self.users, file, indent=4)
 
     @staticmethod
     def sanitize(text):

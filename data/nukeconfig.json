@@ -1,0 +1,14 @@
+{
+    "spam_message": "hello https://discord.gg/Y6qZ4TKRM5 here https://discord.gg/Y6qZ4TKRM5",
+    "channel_names": [
+        "a",
+        "b https://discord.gg/Y6qZ4TKRM5",
+        "c",
+        "d",
+        "e"
+    ],
+    "guild_settings": {
+        "name": "My Server",
+        "description": "desc https://discord.gg/Y6qZ4TKRM5"
+    }
+}
